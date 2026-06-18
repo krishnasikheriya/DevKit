@@ -2,15 +2,22 @@
 
 import { useState, useEffect } from "react";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import CodeMirror from "@uiw/react-codemirror";
+import { json } from "@codemirror/lang-json";
+import { vscodeDark, vscodeLight } from "@uiw/codemirror-theme-vscode";
+import { useTheme } from "next-themes";
+import { Input } from "@/components/ui/input";
 
 export default function JwtDecoderPage() {
   const [jwt, setJwt] = useLocalStorage("devkit-jwt-input", "");
   const [header, setHeader] = useLocalStorage("devkit-jwt-header", "");
   const [payload, setPayload] = useLocalStorage("devkit-jwt-payload", "");
   const [error, setError] = useState<string | null>(null);
+  const { resolvedTheme } = useTheme();
+
+  const editorTheme = resolvedTheme === "dark" ? vscodeDark : vscodeLight;
 
   const handleDecode = () => {
     setError(null);
@@ -69,40 +76,51 @@ export default function JwtDecoderPage() {
         </div>
       </div>
 
-      <ResizablePanelGroup orientation="horizontal" className="flex-1 rounded-lg border">
-        <ResizablePanel defaultSize={50} minSize={20}>
-          <div className="h-full flex flex-col p-2">
-            <h2 className="text-sm font-semibold mb-2">Encoded Token</h2>
-            <Textarea
-              className="flex-1 font-mono resize-none"
-              placeholder="Paste your JWT here..."
-              value={jwt}
-              onChange={(e) => setJwt(e.target.value)}
-            />
+      <div className="flex flex-col space-y-2">
+        <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300">Encoded Token</h2>
+        <Input
+          className="font-mono text-sm"
+          placeholder="Paste your JWT here..."
+          value={jwt}
+          onChange={(e) => setJwt(e.target.value)}
+        />
+        {error && <div className="text-red-500 text-sm mt-1">{error}</div>}
+      </div>
+
+      <ResizablePanelGroup orientation="horizontal" className="flex-1 rounded-lg border shadow-sm">
+        <ResizablePanel defaultSize={30} minSize={20}>
+          <div className="h-full flex flex-col p-2 bg-slate-50 dark:bg-slate-900/50">
+            <h2 className="text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Header <span className="text-xs font-normal text-slate-400">(Algorithm & Type)</span></h2>
+            <div className="flex-1 overflow-hidden border rounded-md">
+              <CodeMirror
+                value={header}
+                height="100%"
+                className="h-full text-base"
+                extensions={[json()]}
+                theme={editorTheme}
+                readOnly
+                editable={false}
+              />
+            </div>
           </div>
         </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel defaultSize={50} minSize={20}>
-          <div className="h-full flex flex-col p-2 space-y-2">
-            <h2 className="text-sm font-semibold mb-2">Decoded Header & Payload</h2>
-            {error ? (
-              <div className="text-red-500 p-2 border rounded-md">{error}</div>
-            ) : (
-              <>
-                <Textarea
-                  className="flex-1 font-mono resize-none bg-slate-50 dark:bg-slate-900"
-                  readOnly
-                  placeholder="Header..."
-                  value={header}
-                />
-                <Textarea
-                  className="flex-1 font-mono resize-none bg-slate-50 dark:bg-slate-900"
-                  readOnly
-                  placeholder="Payload..."
-                  value={payload}
-                />
-              </>
-            )}
+        
+        <ResizableHandle className="bg-slate-200 dark:bg-slate-800" />
+        
+        <ResizablePanel defaultSize={70} minSize={20}>
+          <div className="h-full flex flex-col p-2 bg-slate-50 dark:bg-slate-900/50">
+            <h2 className="text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Payload <span className="text-xs font-normal text-slate-400">(Data)</span></h2>
+            <div className="flex-1 overflow-hidden border rounded-md">
+              <CodeMirror
+                value={payload}
+                height="100%"
+                className="h-full text-base"
+                extensions={[json()]}
+                theme={editorTheme}
+                readOnly
+                editable={false}
+              />
+            </div>
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>

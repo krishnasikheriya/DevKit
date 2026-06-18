@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
-import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import CodeMirror from "@uiw/react-codemirror";
+import { vscodeDark, vscodeLight } from "@uiw/codemirror-theme-vscode";
+import { useTheme } from "next-themes";
 
 export default function RegexTesterPage() {
   const [regex, setRegex] = useLocalStorage("devkit-regex-pattern", "");
@@ -13,6 +15,9 @@ export default function RegexTesterPage() {
   const [testString, setTestString] = useLocalStorage("devkit-regex-input", "");
   const [matches, setMatches] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const { resolvedTheme } = useTheme();
+
+  const editorTheme = resolvedTheme === "dark" ? vscodeDark : vscodeLight;
 
   // Dynamically evaluate the regex against the testString on changes
   useEffect(() => {
@@ -52,18 +57,18 @@ export default function RegexTesterPage() {
 
       <div className="flex space-x-4">
         <div className="flex-1">
-          <Label>Regular Expression</Label>
+          <Label className="text-slate-700 dark:text-slate-300">Regular Expression</Label>
           <Input
-            className="font-mono mt-1"
+            className="font-mono mt-1 border-slate-300 dark:border-slate-700 focus-visible:ring-primary"
             placeholder="^[a-z0-9]+$"
             value={regex}
             onChange={(e) => setRegex(e.target.value)}
           />
         </div>
         <div className="w-24">
-          <Label>Flags</Label>
+          <Label className="text-slate-700 dark:text-slate-300">Flags</Label>
           <Input
-            className="font-mono mt-1"
+            className="font-mono mt-1 border-slate-300 dark:border-slate-700 focus-visible:ring-primary"
             placeholder="gim"
             value={flags}
             onChange={(e) => setFlags(e.target.value)}
@@ -71,34 +76,41 @@ export default function RegexTesterPage() {
         </div>
       </div>
 
-      <ResizablePanelGroup orientation="horizontal" className="flex-1 rounded-lg border">
+      <ResizablePanelGroup orientation="horizontal" className="flex-1 rounded-lg border shadow-sm">
         <ResizablePanel defaultSize={50} minSize={20}>
-          <div className="h-full flex flex-col p-2">
-            <h2 className="text-sm font-semibold mb-2">Test String</h2>
-            <Textarea
-              className="flex-1 font-mono resize-none"
-              placeholder="Enter text to test your regex against..."
-              value={testString}
-              onChange={(e) => setTestString(e.target.value)}
-            />
+          <div className="h-full flex flex-col p-2 bg-slate-50 dark:bg-slate-900/50">
+            <h2 className="text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Test String</h2>
+            <div className="flex-1 overflow-hidden border rounded-md">
+              <CodeMirror
+                value={testString}
+                height="100%"
+                className="h-full text-base"
+                theme={editorTheme}
+                onChange={(value) => setTestString(value)}
+              />
+            </div>
           </div>
         </ResizablePanel>
-        <ResizableHandle />
+        <ResizableHandle className="bg-slate-200 dark:bg-slate-800" />
         <ResizablePanel defaultSize={50} minSize={20}>
-          <div className="h-full flex flex-col p-2 space-y-2">
-            <h2 className="text-sm font-semibold mb-2">Matches / Result</h2>
+          <div className="h-full flex flex-col p-2 space-y-2 bg-slate-50 dark:bg-slate-900/50">
+            <h2 className="text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Matches / Result</h2>
             {error ? (
-              <div className="text-red-500 p-2 border rounded-md">{error}</div>
+              <div className="text-red-500 flex-1 p-4 border rounded-md font-mono bg-red-50 dark:bg-red-950/30 overflow-auto whitespace-pre-wrap shadow-inner">
+                <span className="font-bold">Error:</span> {error}
+              </div>
             ) : (
-              <div className="flex-1 p-2 border rounded-md overflow-auto bg-slate-50 dark:bg-slate-900 font-mono text-sm">
+              <div className="flex-1 p-3 border rounded-md overflow-auto bg-white dark:bg-[#1e1e1e] shadow-inner font-mono text-sm">
                 {matches.length > 0 ? (
-                  matches.map((match, i) => (
-                    <div key={i} className="mb-1 p-1 bg-blue-100 dark:bg-blue-900 rounded break-all">
-                      {match}
-                    </div>
-                  ))
+                  <div className="space-y-1">
+                    {matches.map((match, i) => (
+                      <div key={i} className="p-1.5 px-2 bg-primary/10 dark:bg-primary/20 text-primary-foreground dark:text-primary rounded break-all border border-primary/20">
+                        {match}
+                      </div>
+                    ))}
+                  </div>
                 ) : (
-                  <span className="text-slate-400">No matches found.</span>
+                  <div className="text-slate-400 dark:text-slate-500 italic flex items-center justify-center h-full">No matches found.</div>
                 )}
               </div>
             )}

@@ -2,14 +2,19 @@
 
 import { useState, useEffect } from "react";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import CodeMirror from "@uiw/react-codemirror";
+import { vscodeDark, vscodeLight } from "@uiw/codemirror-theme-vscode";
+import { useTheme } from "next-themes";
 
 export default function Base64Page() {
   const [input, setInput] = useLocalStorage("devkit-base64-input", "");
   const [output, setOutput] = useLocalStorage("devkit-base64-output", "");
   const [error, setError] = useState<string | null>(null);
+  const { resolvedTheme } = useTheme();
+
+  const editorTheme = resolvedTheme === "dark" ? vscodeDark : vscodeLight;
 
   const handleEncode = () => {
     setError(null);
@@ -68,30 +73,40 @@ export default function Base64Page() {
         </div>
       </div>
 
-      <ResizablePanelGroup orientation="horizontal" className="flex-1 rounded-lg border">
+      <ResizablePanelGroup orientation="horizontal" className="flex-1 rounded-lg border shadow-sm">
         <ResizablePanel defaultSize={50} minSize={20}>
-          <div className="h-full flex flex-col p-2">
-            <h2 className="text-sm font-semibold mb-2">Input</h2>
-            <Textarea
-              className="flex-1 font-mono resize-none"
-              placeholder="Enter text or Base64 string..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-            />
+          <div className="h-full flex flex-col p-2 bg-slate-50 dark:bg-slate-900/50">
+            <h2 className="text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Input</h2>
+            <div className="flex-1 overflow-hidden border rounded-md">
+              <CodeMirror
+                value={input}
+                height="100%"
+                className="h-full text-base"
+                theme={editorTheme}
+                onChange={(value) => setInput(value)}
+              />
+            </div>
           </div>
         </ResizablePanel>
-        <ResizableHandle />
+        <ResizableHandle className="bg-slate-200 dark:bg-slate-800" />
         <ResizablePanel defaultSize={50} minSize={20}>
-          <div className="h-full flex flex-col p-2 space-y-2">
-            <h2 className="text-sm font-semibold mb-2">Output</h2>
+          <div className="h-full flex flex-col p-2 space-y-2 bg-slate-50 dark:bg-slate-900/50">
+            <h2 className="text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">Output</h2>
             {error ? (
-              <div className="text-red-500 flex-1 p-2 border rounded-md">{error}</div>
+              <div className="text-red-500 flex-1 p-4 border rounded-md font-mono bg-red-50 dark:bg-red-950/30 overflow-auto whitespace-pre-wrap shadow-inner">
+                <span className="font-bold">Error:</span> {error}
+              </div>
             ) : (
-              <Textarea
-                className="flex-1 font-mono resize-none bg-slate-50 dark:bg-slate-900"
-                readOnly
-                value={output}
-              />
+              <div className="flex-1 overflow-hidden border rounded-md">
+                <CodeMirror
+                  value={output}
+                  height="100%"
+                  className="h-full text-base"
+                  theme={editorTheme}
+                  readOnly
+                  editable={false}
+                />
+              </div>
             )}
           </div>
         </ResizablePanel>
