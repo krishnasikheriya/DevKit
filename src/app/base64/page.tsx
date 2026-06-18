@@ -6,49 +6,65 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 
-export default function JsonFormatterPage() {
-  const [inputJson, setInputJson] = useLocalStorage("devkit-json-input", "");
-  const [outputJson, setOutputJson] = useLocalStorage("devkit-json-output", "");
+export default function Base64Page() {
+  const [input, setInput] = useLocalStorage("devkit-base64-input", "");
+  const [output, setOutput] = useLocalStorage("devkit-base64-output", "");
   const [error, setError] = useState<string | null>(null);
 
-  // Implement handleFormat logic to parse inputJson, format it with 2 spaces, and setOutputJson.
-  const handleFormat = () => {
+  const handleEncode = () => {
     setError(null);
-    
-    if (!inputJson.trim()) {
-      setOutputJson("");
+    if (!input) {
+      setOutput("");
       return;
     }
-
     try {
-      const parsed = JSON.parse(inputJson);
-      const formatted = JSON.stringify(parsed, null, 2);
-      setOutputJson(formatted);
-    } catch (anyError: any) {
-      setOutputJson("");
-      setError(anyError.message || "Invalid JSON format");
+      // Encode string to UTF-8, then to Base64
+      const encoded = btoa(unescape(encodeURIComponent(input)));
+      setOutput(encoded);
+    } catch (err: any) {
+      setError("Encoding failed: " + err.message);
+      setOutput("");
     }
   };
 
-  // Handle Shift+Enter shortcut
+  const handleDecode = () => {
+    setError(null);
+    if (!input) {
+      setOutput("");
+      return;
+    }
+    try {
+      // Decode Base64 to UTF-8 string
+      const decoded = decodeURIComponent(escape(atob(input)));
+      setOutput(decoded);
+    } catch (err: any) {
+      setError("Invalid Base64 string: " + err.message);
+      setOutput("");
+    }
+  };
+
+  // Handle keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!e.metaKey && e.shiftKey && e.key === 'Enter') {
+      if (e.metaKey && e.shiftKey && e.key === 'Enter') {
         e.preventDefault();
-        handleFormat();
+        handleEncode();
+      } else if (!e.metaKey && e.shiftKey && e.key === 'Enter') {
+        e.preventDefault();
+        handleDecode();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [inputJson]);
+  }, [input]);
 
   return (
     <div className="h-full flex flex-col p-4 space-y-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">JSON Formatter</h1>
-        <div className="flex items-center gap-4">
-          <span className="text-xs text-slate-500 hidden md:inline-block border px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">Shift + Enter to Format</span>
-          <Button onClick={handleFormat}>Format JSON</Button>
+        <h1 className="text-2xl font-bold">Base64 Encoder / Decoder</h1>
+        <div className="space-x-2">
+          <Button onClick={handleEncode} variant="secondary">Encode</Button>
+          <Button onClick={handleDecode}>Decode</Button>
         </div>
       </div>
 
@@ -58,27 +74,23 @@ export default function JsonFormatterPage() {
             <h2 className="text-sm font-semibold mb-2">Input</h2>
             <Textarea
               className="flex-1 font-mono resize-none"
-              placeholder="Paste your JSON here..."
-              value={inputJson}
-              onChange={(e) => setInputJson(e.target.value)}
+              placeholder="Enter text or Base64 string..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
             />
           </div>
         </ResizablePanel>
-        
         <ResizableHandle />
-        
         <ResizablePanel defaultSize={50} minSize={20}>
-          <div className="h-full flex flex-col p-2">
+          <div className="h-full flex flex-col p-2 space-y-2">
             <h2 className="text-sm font-semibold mb-2">Output</h2>
             {error ? (
-              <div className="text-red-500 flex-1 p-2 border rounded-md font-mono bg-red-50 dark:bg-red-950/30 overflow-auto whitespace-pre-wrap">
-                {error}
-              </div>
+              <div className="text-red-500 flex-1 p-2 border rounded-md">{error}</div>
             ) : (
               <Textarea
                 className="flex-1 font-mono resize-none bg-slate-50 dark:bg-slate-900"
                 readOnly
-                value={outputJson}
+                value={output}
               />
             )}
           </div>
