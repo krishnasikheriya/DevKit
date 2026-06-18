@@ -27,7 +27,7 @@ export function Sidebar() {
 
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-2">
-          <div className="text-sm font-medium text-slate-500 mb-2 px-2 uppercase tracking-wider text-xs">Tools</div>
+          <div className="text-sm font-medium text-slate-500 mb-2 px-2 uppercase tracking-wider">Tools</div>
 
           {TOOLS.map((tool) => {
             const isActive = pathname === tool.href;
