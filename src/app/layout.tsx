@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { AuthGate } from "@/components/layout/AuthGate";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Topbar } from "@/components/layout/Topbar";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,20 +46,19 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AuthProvider>
-            <QueryProvider>
-              <AuthGate>
-                <div className="flex h-screen w-full overflow-hidden">
+            <AuthGate>
+              <QueryProvider>
+                <div className="flex h-screen w-full overflow-hidden bg-slate-50/50 dark:bg-slate-950/50">
                   <Sidebar />
                   <div className="flex-1 flex flex-col min-w-0">
                     <Topbar />
-                    <main className="flex-1 overflow-auto bg-slate-50/50 dark:bg-slate-950/50">
-                      {children}
-                    </main>
+                    <main className="flex-1 overflow-auto">{children}</main>
                   </div>
                 </div>
-              </AuthGate>
-            </QueryProvider>
+              </QueryProvider>
+            </AuthGate>
           </AuthProvider>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

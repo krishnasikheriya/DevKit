@@ -1,17 +1,29 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
-import { Braces, KeyRound, SearchCode, Binary } from "lucide-react";
+import {
+  Braces,
+  KeyRound,
+  SearchCode,
+  Binary,
+  Link as LinkIcon,
+  Hash,
+  Fingerprint,
+} from "lucide-react";
 
 const TOOLS = [
   { name: "JSON Formatter", href: "/", icon: Braces },
   { name: "JWT Decoder", href: "/jwt", icon: KeyRound },
   { name: "Regex Tester", href: "/regex", icon: SearchCode },
   { name: "Base64 Encoder", href: "/base64", icon: Binary },
+  { name: "URL Encoder", href: "/url", icon: LinkIcon },
+  { name: "Hash Generator", href: "/hash", icon: Hash },
+  { name: "UUID Generator", href: "/uuid", icon: Fingerprint },
 ];
 
 export function Sidebar() {
@@ -27,7 +39,9 @@ export function Sidebar() {
 
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-2">
-          <div className="text-sm font-medium text-slate-500 mb-2 px-2 uppercase tracking-wider">Tools</div>
+          <div className="text-sm font-medium text-slate-500 mb-2 px-2 uppercase tracking-wider">
+            Tools
+          </div>
 
           {TOOLS.map((tool) => {
             const isActive = pathname === tool.href;
