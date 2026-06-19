@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { Clock } from "lucide-react";
 import cronstrue from "cronstrue";
-import * as parser from "cron-parser";
+import { CronExpressionParser } from "cron-parser";
 import { ClearInputButton } from "@/components/ui/clear-input";
 
 export default function CronPage() {
@@ -27,8 +27,7 @@ export default function CronPage() {
       setHumanReadable(readable);
 
       // 2. Get Next 5 Runs
-      // @ts-expect-error Typescript bindings for cron-parser might be slightly misconfigured
-      const interval = parser.parseExpression(expression);
+      const interval = CronExpressionParser.parse(expression);
       const runs: string[] = [];
       for (let i = 0; i < 5; i++) {
         runs.push(interval.next().toString());
