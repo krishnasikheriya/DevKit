@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ShareSnippet } from "@/components/ui/share-snippet";
 
 export default function SqlFormatterPage() {
   const [inputSql, setInputSql] = useLocalStorage("devkit-sql-input", "");
@@ -84,6 +85,7 @@ export default function SqlFormatterPage() {
               <SelectItem value="plsql">PL/SQL</SelectItem>
             </SelectContent>
           </Select>
+          <ShareSnippet content={outputSql} language="sql" defaultTitle="Formatted SQL Query" />
           <Button onClick={handleFormat}>Format SQL</Button>
         </div>
       </div>

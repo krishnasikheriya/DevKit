@@ -22,8 +22,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "DevKit",
   description: "Your ultimate developer utility dashboard",
+  manifest: "/manifest.json",
   icons: {
     icon: "/image.png",
+    apple: "/image.png",
   },
 };
 

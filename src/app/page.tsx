@@ -10,6 +10,7 @@ import { vscodeDark, vscodeLight } from "@uiw/codemirror-theme-vscode";
 import { useTheme } from "next-themes";
 import { CopyToClipboard } from "@/components/ui/copy-to-clipboard";
 import { ClearInputButton } from "@/components/ui/clear-input";
+import { ShareSnippet } from "@/components/ui/share-snippet";
 
 export default function JsonFormatterPage() {
   const [inputJson, setInputJson] = useLocalStorage("devkit-json-input", "");
@@ -65,7 +66,8 @@ export default function JsonFormatterPage() {
     <div className="h-full flex flex-col p-4 space-y-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">JSON Formatter</h1>
-        <div className="space-x-2">
+        <div className="flex items-center gap-2">
+          <ShareSnippet content={outputJson} language="json" defaultTitle="Formatted JSON Data" />
           <Button onClick={handleFormat} variant="default">
             Format
           </Button>

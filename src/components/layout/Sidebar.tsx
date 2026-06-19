@@ -20,6 +20,8 @@ import {
   Type,
   AlignLeft,
   Database,
+  QrCode,
+  FileText,
 } from "lucide-react";
 
 const TOOL_CATEGORIES = [
@@ -50,6 +52,7 @@ const TOOL_CATEGORIES = [
     tools: [
       { name: "Hash Generator", href: "/hash", icon: Hash },
       { name: "UUID Generator", href: "/uuid", icon: Fingerprint },
+      { name: "QR Code Generator", href: "/qr", icon: QrCode },
     ],
   },
   {
@@ -58,6 +61,7 @@ const TOOL_CATEGORIES = [
       { name: "Regex Tester", href: "/regex", icon: SearchCode },
       { name: "Text Case Converter", href: "/text-case", icon: Type },
       { name: "Lorem Ipsum", href: "/lorem", icon: AlignLeft },
+      { name: "Markdown Previewer", href: "/markdown", icon: FileText },
     ],
   },
 ];

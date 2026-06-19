@@ -17,6 +17,8 @@ import {
   Type,
   AlignLeft,
   Database,
+  QrCode,
+  FileText,
 } from "lucide-react";
 
 import {
@@ -117,6 +119,10 @@ export function CommandMenu() {
                 <Fingerprint className="mr-2 h-4 w-4" />
                 <span>UUID Generator</span>
               </CommandItem>
+              <CommandItem onSelect={() => runCommand(() => router.push("/qr"))}>
+                <QrCode className="mr-2 h-4 w-4" />
+                <span>QR Code Generator</span>
+              </CommandItem>
             </CommandGroup>
 
             <CommandGroup heading="Text & Parsing">
@@ -131,6 +137,10 @@ export function CommandMenu() {
               <CommandItem onSelect={() => runCommand(() => router.push("/lorem"))}>
                 <AlignLeft className="mr-2 h-4 w-4" />
                 <span>Lorem Ipsum Generator</span>
+              </CommandItem>
+              <CommandItem onSelect={() => runCommand(() => router.push("/markdown"))}>
+                <FileText className="mr-2 h-4 w-4" />
+                <span>Markdown Previewer</span>
               </CommandItem>
             </CommandGroup>
 
