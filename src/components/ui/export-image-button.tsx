@@ -4,12 +4,30 @@ import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Image as ImageIcon, Loader2 } from "lucide-react";
 import { toPng } from "html-to-image";
+import { codeToHtml } from "shiki";
 
 interface ExportImageButtonProps {
   content: string;
   language: string;
   title: string;
 }
+
+const LANG_MAP: Record<string, string> = {
+  javascript: "javascript",
+  typescript: "typescript",
+  python: "python",
+  java: "java",
+  cpp: "cpp",
+  rust: "rust",
+  go: "go",
+  php: "php",
+  sql: "sql",
+  json: "json",
+  html: "html",
+  css: "css",
+  markdown: "markdown",
+  plaintext: "text",
+};
 
 export function ExportImageButton({ content, language, title }: ExportImageButtonProps) {
   const [isExporting, setIsExporting] = useState(false);
@@ -18,14 +36,17 @@ export function ExportImageButton({ content, language, title }: ExportImageButto
     try {
       setIsExporting(true);
 
+      const shikiLang = LANG_MAP[language] || "text";
+      const highlightedHtml = await codeToHtml(content, {
+        lang: shikiLang,
+        theme: "one-dark-pro",
+      });
+
       const wrapper = document.createElement("div");
       wrapper.style.position = "fixed";
       wrapper.style.left = "-9999px";
       wrapper.style.top = "0";
       wrapper.style.zIndex = "-9999";
-
-      const lines = content.split("\n");
-      const lineNumberWidth = String(lines.length).length;
 
       wrapper.innerHTML = `
         <div id="export-capture" style="
@@ -34,7 +55,6 @@ export function ExportImageButton({ content, language, title }: ExportImageButto
           width: 800px;
         ">
           <div style="
-            background: var(--background, #1e1e2e);
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
@@ -42,8 +62,8 @@ export function ExportImageButton({ content, language, title }: ExportImageButto
           ">
             <div style="
               height: 48px;
-              background: var(--muted, #2a2a3e);
-              border-bottom: 1px solid var(--border, #3a3a4e);
+              background: #282c34;
+              border-bottom: 1px solid #3e4451;
               display: flex;
               align-items: center;
               padding: 0 16px;
@@ -56,39 +76,32 @@ export function ExportImageButton({ content, language, title }: ExportImageButto
                 margin-left: auto;
                 font-size: 13px;
                 font-weight: 500;
-                color: var(--muted-foreground, #888);
+                color: #636d83;
                 text-transform: uppercase;
                 letter-spacing: 0.05em;
                 padding-right: 8px;
               ">${title} • ${language}</div>
             </div>
-            <pre style="
-              margin: 0;
-              padding: 24px;
-              font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-              font-size: 14px;
-              line-height: 1.6;
-              color: var(--foreground, #cdd6f4);
-              white-space: pre-wrap;
-              word-break: break-word;
-              overflow: visible;
-            ">${lines
-              .map((line, i) => {
-                const num = String(i + 1).padStart(lineNumberWidth, " ");
-                const escapedLine = line
-                  .replace(/&/g, "&amp;")
-                  .replace(/</g, "&lt;")
-                  .replace(/>/g, "&gt;");
-                return `<span style="color: var(--muted-foreground, #6c7086); user-select: none; display: inline-block; width: ${lineNumberWidth + 1}ch; text-align: right; margin-right: 1.5ch;">${num}</span>${escapedLine}`;
-              })
-              .join("\n")}</pre>
+            <div class="shiki-export-wrapper" style="padding: 0;">
+              ${highlightedHtml}
+            </div>
           </div>
         </div>
       `;
 
-      document.body.appendChild(wrapper);
+      const preEl = wrapper.querySelector("pre");
+      if (preEl) {
+        preEl.style.margin = "0";
+        preEl.style.padding = "24px";
+        preEl.style.fontSize = "14px";
+        preEl.style.lineHeight = "1.6";
+        preEl.style.whiteSpace = "pre-wrap";
+        preEl.style.wordBreak = "break-word";
+        preEl.style.overflow = "visible";
+        preEl.style.borderRadius = "0";
+      }
 
-      // Wait for the browser to paint
+      document.body.appendChild(wrapper);
       await new Promise(r => setTimeout(r, 100));
 
       const captureEl = document.getElementById("export-capture");
@@ -100,7 +113,6 @@ export function ExportImageButton({ content, language, title }: ExportImageButto
         backgroundColor: "transparent",
       });
 
-      // Clean up
       document.body.removeChild(wrapper);
 
       const link = document.createElement("a");
