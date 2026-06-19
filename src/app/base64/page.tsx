@@ -69,9 +69,9 @@ export default function Base64Page() {
 
   return (
     <div className="h-full flex flex-col p-4 space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <h1 className="text-2xl font-bold">Base64 Encoder / Decoder</h1>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
           <span
             className="text-xs text-slate-500 hidden lg:inline-block border px-2 py-1 rounded bg-slate-100 dark:bg-slate-800"
             title="Cmd/Ctrl + Shift + Enter"

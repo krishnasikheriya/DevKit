@@ -66,9 +66,9 @@ export default function JsonFormatterPage() {
 
   return (
     <div className="h-full flex flex-col p-4 space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <h1 className="text-2xl font-bold">JSON Formatter</h1>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
           <ShareSnippet content={outputJson} language="json" defaultTitle="Formatted JSON Data" />
           <Button onClick={handleFormat} variant="default">
             Format

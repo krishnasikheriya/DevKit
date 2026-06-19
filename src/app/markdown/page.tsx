@@ -89,12 +89,12 @@ export default function MarkdownPreviewerPage() {
 
   return (
     <div className="h-full flex flex-col p-4 space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <FileText className="h-6 w-6 text-primary" />
           Markdown Previewer
         </h1>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
           <ShareSnippet content={content} language="markdown" defaultTitle="Markdown Document" />
           <Button onClick={downloadHtml} variant="outline" className="gap-2">
             <Download className="h-4 w-4" />

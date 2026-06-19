@@ -53,7 +53,7 @@ export default function HashGeneratorPage() {
 
   return (
     <div className="h-full flex flex-col p-4 space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <h1 className="text-2xl font-bold">Hash Generator</h1>
       </div>
 

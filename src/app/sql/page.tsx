@@ -68,12 +68,12 @@ export default function SqlFormatterPage() {
 
   return (
     <div className="h-full flex flex-col p-4 space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <Database className="h-6 w-6 text-primary" />
           SQL Formatter
         </h1>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
           <Select value={dialect} onValueChange={(val) => val && setDialect(val)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Select Dialect" />

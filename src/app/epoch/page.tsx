@@ -69,7 +69,7 @@ export default function EpochConverterPage() {
 
   return (
     <div className="h-full flex flex-col p-4 space-y-6 max-w-5xl mx-auto w-full">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <h1 className="text-2xl font-bold flex items-center gap-2">
           <Clock className="h-6 w-6 text-primary" />
           Epoch / Unix Timestamp Converter
