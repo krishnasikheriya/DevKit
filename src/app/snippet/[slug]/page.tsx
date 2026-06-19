@@ -7,6 +7,7 @@ import { CopyToClipboard } from "@/components/ui/copy-to-clipboard";
 import { Share2, Clock, User, Code2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { ExportImageButton } from "@/components/ui/export-image-button";
 
 export async function generateMetadata({
   params,
@@ -67,7 +68,8 @@ export default async function SnippetPage({ params }: { params: { slug: string }
             </span>
           </div>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
+          <ExportImageButton targetId="snippet-export-container" fileName={`${snippet.title}-snippet.png`} />
           <CopyToClipboard text={snippet.content} />
         </div>
       </div>
@@ -80,8 +82,8 @@ export default async function SnippetPage({ params }: { params: { slug: string }
                 Raw Markdown
               </span>
             </div>
-            <div className="flex-1 relative">
-              <div className="absolute inset-0">
+            <div className="flex-1 relative bg-background" id="snippet-export-container">
+              <div className="absolute inset-0 p-4">
                 <SnippetViewer content={snippet.content} language={snippet.language} />
               </div>
             </div>
@@ -101,7 +103,7 @@ export default async function SnippetPage({ params }: { params: { slug: string }
         </div>
       ) : (
         <div className="flex-1 border rounded-lg overflow-hidden bg-card shadow-sm min-h-[400px]">
-          <div className="h-full w-full">
+          <div className="h-full w-full bg-background p-4" id="snippet-export-container">
             <SnippetViewer content={snippet.content} language={snippet.language} />
           </div>
         </div>

@@ -22,12 +22,15 @@ import {
   Database,
   QrCode,
   FileText,
+  Star,
 } from "lucide-react";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 const TOOL_CATEGORIES = [
   {
     name: "Converters",
     tools: [
+      { name: "Crontab Explainer", href: "/cron", icon: Clock },
       { name: "Epoch Converter", href: "/epoch", icon: Clock },
       { name: "Color Converter", href: "/color", icon: Palette },
     ],
@@ -58,6 +61,8 @@ const TOOL_CATEGORIES = [
   {
     name: "Text & Parsing",
     tools: [
+      { name: "Text Diff Viewer", href: "/diff", icon: SearchCode },
+      { name: "JSON to TS", href: "/json-to-ts", icon: Braces },
       { name: "Regex Tester", href: "/regex", icon: SearchCode },
       { name: "Text Case Converter", href: "/text-case", icon: Type },
       { name: "Lorem Ipsum", href: "/lorem", icon: AlignLeft },
@@ -69,6 +74,23 @@ const TOOL_CATEGORIES = [
 export function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const { data: session } = useSession();
+  const [pinnedTools, setPinnedTools] = useLocalStorage<string[]>("devkit-pinned-tools", []);
+
+  const togglePin = (e: React.MouseEvent, toolName: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setPinnedTools((prev) => 
+      prev.includes(toolName) ? prev.filter(t => t !== toolName) : [...prev, toolName]
+    );
+  };
+
+  const allTools = TOOL_CATEGORIES.flatMap((c) => c.tools);
+  const favoriteTools = allTools.filter((t) => pinnedTools.includes(t.name));
+
+  const displayCategories = [
+    ...(favoriteTools.length > 0 ? [{ name: "Favorites", tools: favoriteTools }] : []),
+    ...TOOL_CATEGORIES,
+  ];
 
   return (
     <>
@@ -81,35 +103,51 @@ export function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 
       <ScrollArea className="flex-1 min-h-0 py-6 px-4">
         <div className="space-y-6">
-          {TOOL_CATEGORIES.map((category) => (
-            <div key={category.name}>
+          {displayCategories.map((category, idx) => (
+            <div key={`${category.name}-${idx}`}>
               <h3 className="mb-2 px-4 text-xs font-semibold uppercase tracking-wider text-slate-500">
                 {category.name}
               </h3>
               <nav className="space-y-1">
                 {category.tools.map((tool) => {
                   const isActive = pathname === tool.href;
+                  const isPinned = pinnedTools.includes(tool.name);
+                  
                   return (
                     <Link
-                      key={tool.name}
+                      key={`${category.name}-${tool.name}`}
                       href={tool.href}
                       onClick={onNavigate}
                       className={cn(
-                        "group flex items-center gap-3 px-4 py-2.5 rounded-md transition-all duration-300 text-sm font-medium",
+                        "group flex items-center justify-between px-4 py-2.5 rounded-md transition-all duration-300 text-sm font-medium",
                         isActive
                           ? "bg-primary/10 text-primary shadow-sm ring-1 ring-primary/20"
                           : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                       )}
                     >
-                      <tool.icon
+                      <div className="flex items-center gap-3">
+                        <tool.icon
+                          className={cn(
+                            "h-4 w-4 transition-transform duration-300 group-hover:scale-110",
+                            isActive
+                              ? "text-primary"
+                              : "text-muted-foreground group-hover:text-foreground"
+                          )}
+                        />
+                        {tool.name}
+                      </div>
+                      
+                      <button 
+                        onClick={(e) => togglePin(e, tool.name)}
                         className={cn(
-                          "h-4 w-4 transition-transform duration-300 group-hover:scale-110",
-                          isActive
-                            ? "text-primary"
-                            : "text-muted-foreground group-hover:text-foreground"
+                          "opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-muted",
+                          isPinned && "opacity-100 text-yellow-500 hover:text-yellow-600",
+                          !isPinned && "text-muted-foreground hover:text-foreground"
                         )}
-                      />
-                      {tool.name}
+                        title={isPinned ? "Unpin tool" : "Pin tool"}
+                      >
+                        <Star className={cn("h-4 w-4", isPinned && "fill-current")} />
+                      </button>
                     </Link>
                   );
                 })}
