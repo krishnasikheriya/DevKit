@@ -72,7 +72,7 @@ for (let i = 0; i < 10; i++) {
 export default function CodePastePage() {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const [code, setCode] = useLocalStorage("devkit-code-paste", DEFAULT_CODE);
-  const [language, setLanguage] = useState("javascript");
+  const [language, setLanguage] = useLocalStorage("devkit-code-paste-language", "javascript");
   const [title, setTitle] = useLocalStorage("devkit-code-paste-title", "My Code Snippet");
   const { resolvedTheme } = useTheme();
   const [exportDark, setExportDark] = useState(true);
