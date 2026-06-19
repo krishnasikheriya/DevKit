@@ -2,10 +2,9 @@
 
 import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Image as ImageIcon, Loader2 } from "lucide-react";
+import { Image as ImageIcon, Loader2, Sun, Moon } from "lucide-react";
 import { toPng } from "html-to-image";
 import { codeToHtml } from "shiki";
-import { useTheme } from "next-themes";
 
 interface ExportImageButtonProps {
   content: string;
@@ -32,21 +31,20 @@ const LANG_MAP: Record<string, string> = {
 
 export function ExportImageButton({ content, language, title }: ExportImageButtonProps) {
   const [isExporting, setIsExporting] = useState(false);
-  const { resolvedTheme } = useTheme();
+  const [exportDark, setExportDark] = useState(true);
 
   const handleExport = useCallback(async () => {
     try {
       setIsExporting(true);
 
       const shikiLang = LANG_MAP[language] || "text";
-      const isDark = resolvedTheme === "dark";
       const highlightedHtml = await codeToHtml(content, {
         lang: shikiLang,
-        theme: isDark ? "one-dark-pro" : "github-light",
+        theme: exportDark ? "one-dark-pro" : "github-light",
       });
-      const titleBarBg = isDark ? "#282c34" : "#f6f8fa";
-      const titleBarBorder = isDark ? "#3e4451" : "#d1d5db";
-      const titleBarText = isDark ? "#636d83" : "#6b7280";
+      const titleBarBg = exportDark ? "#282c34" : "#f6f8fa";
+      const titleBarBorder = exportDark ? "#3e4451" : "#d1d5db";
+      const titleBarText = exportDark ? "#636d83" : "#6b7280";
 
       const wrapper = document.createElement("div");
       wrapper.style.position = "fixed";
@@ -130,21 +128,36 @@ export function ExportImageButton({ content, language, title }: ExportImageButto
     } finally {
       setIsExporting(false);
     }
-  }, [content, language, title, resolvedTheme]);
+  }, [content, language, title, exportDark]);
 
   return (
-    <Button
-      variant="secondary"
-      onClick={handleExport}
-      disabled={isExporting}
-      className="flex items-center gap-2"
-    >
-      {isExporting ? (
-        <Loader2 className="h-4 w-4 animate-spin" />
-      ) : (
-        <ImageIcon className="h-4 w-4" />
-      )}
-      Export Image
-    </Button>
+    <div className="flex items-center gap-1">
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => setExportDark((d) => !d)}
+        className="h-9 w-9 rounded-md"
+        title={exportDark ? "Export as light theme" : "Export as dark theme"}
+      >
+        {exportDark ? (
+          <Moon className="h-4 w-4" />
+        ) : (
+          <Sun className="h-4 w-4" />
+        )}
+      </Button>
+      <Button
+        variant="secondary"
+        onClick={handleExport}
+        disabled={isExporting}
+        className="flex items-center gap-2"
+      >
+        {isExporting ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <ImageIcon className="h-4 w-4" />
+        )}
+        Export Image
+      </Button>
+    </div>
   );
 }
