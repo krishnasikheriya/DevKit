@@ -75,7 +75,9 @@ export default function CodePastePage() {
   const [language, setLanguage] = useState("javascript");
   const [title, setTitle] = useLocalStorage("devkit-code-paste-title", "My Code Snippet");
   const { resolvedTheme } = useTheme();
+  const [exportDark, setExportDark] = useState(true);
   const editorTheme = resolvedTheme === "dark" ? vscodeDark : vscodeLight;
+  const previewTheme = exportDark ? vscodeDark : vscodeLight;
 
   const lineCount = code.split("\n").length;
   const charCount = code.length;
@@ -93,7 +95,7 @@ export default function CodePastePage() {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-          <ExportImageButton content={code} language={language} title={title} />
+          <ExportImageButton content={code} language={language} title={title} onThemeChange={setExportDark} />
           <ShareSnippet content={code} language={language} defaultTitle={title} />
         </div>
       </div>
@@ -175,7 +177,7 @@ export default function CodePastePage() {
               value={code}
               height="100%"
               extensions={getLanguageExtension(language)}
-              theme={editorTheme}
+              theme={previewTheme}
               className="absolute inset-0 text-base"
               editable={false}
               readOnly={true}

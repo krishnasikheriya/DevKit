@@ -10,6 +10,8 @@ interface ExportImageButtonProps {
   content: string;
   language: string;
   title: string;
+  defaultDark?: boolean;
+  onThemeChange?: (isDark: boolean) => void;
 }
 
 const LANG_MAP: Record<string, string> = {
@@ -29,9 +31,17 @@ const LANG_MAP: Record<string, string> = {
   plaintext: "text",
 };
 
-export function ExportImageButton({ content, language, title }: ExportImageButtonProps) {
+export function ExportImageButton({ content, language, title, defaultDark = true, onThemeChange }: ExportImageButtonProps) {
   const [isExporting, setIsExporting] = useState(false);
-  const [exportDark, setExportDark] = useState(true);
+  const [exportDark, setExportDark] = useState(defaultDark);
+
+  const toggleTheme = useCallback(() => {
+    const newValue = !exportDark;
+    setExportDark(newValue);
+    if (onThemeChange) {
+      onThemeChange(newValue);
+    }
+  }, [exportDark, onThemeChange]);
 
   const handleExport = useCallback(async () => {
     try {
@@ -135,7 +145,7 @@ export function ExportImageButton({ content, language, title }: ExportImageButto
       <Button
         variant="ghost"
         size="icon"
-        onClick={() => setExportDark((d) => !d)}
+        onClick={toggleTheme}
         className="h-9 w-9 rounded-md"
         title={exportDark ? "Export as light theme" : "Export as dark theme"}
       >

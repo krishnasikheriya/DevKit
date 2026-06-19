@@ -12,10 +12,12 @@ interface SnippetViewerProps {
   content: string;
   language: string;
   wrapLines?: boolean;
+  themeOverride?: "dark" | "light";
 }
 
-export function SnippetViewer({ content, language, wrapLines = false }: SnippetViewerProps) {
+export function SnippetViewer({ content, language, wrapLines = false, themeOverride }: SnippetViewerProps) {
   const { resolvedTheme } = useTheme();
+  const effectiveTheme = themeOverride ? themeOverride : resolvedTheme;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let extensions: any[] = [];
 
@@ -44,7 +46,7 @@ export function SnippetViewer({ content, language, wrapLines = false }: SnippetV
       value={content}
       height={wrapLines ? "auto" : "100%"}
       className={wrapLines ? "text-base" : "h-full text-base"}
-      theme={resolvedTheme === "dark" ? vscodeDark : vscodeLight}
+      theme={effectiveTheme === "dark" ? vscodeDark : vscodeLight}
       extensions={extensions}
       editable={false}
       readOnly={true}
