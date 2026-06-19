@@ -23,6 +23,7 @@ import {
   QrCode,
   FileText,
   Star,
+  Code2,
 } from "lucide-react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 
@@ -61,6 +62,7 @@ const TOOL_CATEGORIES = [
   {
     name: "Text & Parsing",
     tools: [
+      { name: "Code Paste", href: "/code-paste", icon: Code2 },
       { name: "Text Diff Viewer", href: "/diff", icon: SearchCode },
       { name: "JSON to TS", href: "/json-to-ts", icon: Braces },
       { name: "Regex Tester", href: "/regex", icon: SearchCode },

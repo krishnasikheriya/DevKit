@@ -18,9 +18,6 @@ export function ExportImageButton({ content, language, title }: ExportImageButto
     try {
       setIsExporting(true);
 
-      // Build a temporary container with all the content as plain HTML.
-      // This avoids CodeMirror's viewport virtualization which only renders
-      // visible lines and was the root cause of content being cut off.
       const wrapper = document.createElement("div");
       wrapper.style.position = "fixed";
       wrapper.style.left = "-9999px";
