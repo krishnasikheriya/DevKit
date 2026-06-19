@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Image as ImageIcon, Loader2 } from "lucide-react";
 import { toPng } from "html-to-image";
 import { codeToHtml } from "shiki";
+import { useTheme } from "next-themes";
 
 interface ExportImageButtonProps {
   content: string;
@@ -31,16 +32,21 @@ const LANG_MAP: Record<string, string> = {
 
 export function ExportImageButton({ content, language, title }: ExportImageButtonProps) {
   const [isExporting, setIsExporting] = useState(false);
+  const { resolvedTheme } = useTheme();
 
   const handleExport = useCallback(async () => {
     try {
       setIsExporting(true);
 
       const shikiLang = LANG_MAP[language] || "text";
+      const isDark = resolvedTheme === "dark";
       const highlightedHtml = await codeToHtml(content, {
         lang: shikiLang,
-        theme: "one-dark-pro",
+        theme: isDark ? "one-dark-pro" : "github-light",
       });
+      const titleBarBg = isDark ? "#282c34" : "#f6f8fa";
+      const titleBarBorder = isDark ? "#3e4451" : "#d1d5db";
+      const titleBarText = isDark ? "#636d83" : "#6b7280";
 
       const wrapper = document.createElement("div");
       wrapper.style.position = "fixed";
@@ -62,8 +68,8 @@ export function ExportImageButton({ content, language, title }: ExportImageButto
           ">
             <div style="
               height: 48px;
-              background: #282c34;
-              border-bottom: 1px solid #3e4451;
+              background: ${titleBarBg};
+              border-bottom: 1px solid ${titleBarBorder};
               display: flex;
               align-items: center;
               padding: 0 16px;
@@ -76,7 +82,7 @@ export function ExportImageButton({ content, language, title }: ExportImageButto
                 margin-left: auto;
                 font-size: 13px;
                 font-weight: 500;
-                color: #636d83;
+                color: ${titleBarText};
                 text-transform: uppercase;
                 letter-spacing: 0.05em;
                 padding-right: 8px;
@@ -124,7 +130,7 @@ export function ExportImageButton({ content, language, title }: ExportImageButto
     } finally {
       setIsExporting(false);
     }
-  }, [content, language, title]);
+  }, [content, language, title, resolvedTheme]);
 
   return (
     <Button
