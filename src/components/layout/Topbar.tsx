@@ -16,15 +16,18 @@ const ROUTE_TITLES: Record<string, string> = {
   "/url": "URL Encoder",
   "/hash": "Hash Generator",
   "/uuid": "UUID Generator",
+  "/epoch": "Epoch Converter",
+  "/color": "Color Converter",
+  "/text-case": "Text Case Converter",
+  "/lorem": "Lorem Ipsum Generator",
+  "/sql": "SQL Formatter",
 };
 
 export function Topbar() {
   const pathname = usePathname();
   const { data: session, status } = useSession();
   const [isSigningOut, setIsSigningOut] = useState(false);
-
-  // Dynamically resolve tool name based on the route string fallback to 'Dashboard'
-  const currentToolName = ROUTE_TITLES[pathname] || "DevKit Tool";
+  const title = ROUTE_TITLES[pathname] || "Dashboard";
 
   const handleSignOut = () => {
     setIsSigningOut(true);
@@ -32,9 +35,9 @@ export function Topbar() {
   };
 
   return (
-    <div className="h-14 border-b flex items-center justify-between px-4 bg-white dark:bg-slate-950">
-      <div className="font-semibold text-sm flex items-center gap-4">
-        {currentToolName}
+    <div className="h-16 border-b border-border/40 bg-background/60 backdrop-blur-2xl flex items-center justify-between px-6 z-20 sticky top-0">
+      <div className="flex items-center gap-4">
+        <h1 className="text-xl font-semibold tracking-tight">{title}</h1>
         <CommandMenu />
       </div>
 

@@ -12,6 +12,11 @@ import {
   Link as LinkIcon,
   Hash,
   Fingerprint,
+  Clock,
+  Palette,
+  Type,
+  AlignLeft,
+  Database,
 } from "lucide-react";
 
 import {
@@ -65,18 +70,33 @@ export function CommandMenu() {
           <CommandInput placeholder="Type a command or search tools..." />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup heading="Tools">
+
+            <CommandGroup heading="Converters">
+              <CommandItem onSelect={() => runCommand(() => router.push("/epoch"))}>
+                <Clock className="mr-2 h-4 w-4" />
+                <span>Epoch Converter</span>
+              </CommandItem>
+              <CommandItem onSelect={() => runCommand(() => router.push("/color"))}>
+                <Palette className="mr-2 h-4 w-4" />
+                <span>Color Converter</span>
+              </CommandItem>
+            </CommandGroup>
+
+            <CommandGroup heading="Formatters">
               <CommandItem onSelect={() => runCommand(() => router.push("/"))}>
                 <Braces className="mr-2 h-4 w-4" />
                 <span>JSON Formatter</span>
               </CommandItem>
+              <CommandItem onSelect={() => runCommand(() => router.push("/sql"))}>
+                <Database className="mr-2 h-4 w-4" />
+                <span>SQL Formatter</span>
+              </CommandItem>
+            </CommandGroup>
+
+            <CommandGroup heading="Encoders / Decoders">
               <CommandItem onSelect={() => runCommand(() => router.push("/jwt"))}>
                 <KeyRound className="mr-2 h-4 w-4" />
                 <span>JWT Decoder</span>
-              </CommandItem>
-              <CommandItem onSelect={() => runCommand(() => router.push("/regex"))}>
-                <SearchCode className="mr-2 h-4 w-4" />
-                <span>Regex Tester</span>
               </CommandItem>
               <CommandItem onSelect={() => runCommand(() => router.push("/base64"))}>
                 <Binary className="mr-2 h-4 w-4" />
@@ -86,6 +106,9 @@ export function CommandMenu() {
                 <LinkIcon className="mr-2 h-4 w-4" />
                 <span>URL Encoder</span>
               </CommandItem>
+            </CommandGroup>
+
+            <CommandGroup heading="Generators">
               <CommandItem onSelect={() => runCommand(() => router.push("/hash"))}>
                 <Hash className="mr-2 h-4 w-4" />
                 <span>Hash Generator</span>
@@ -95,6 +118,22 @@ export function CommandMenu() {
                 <span>UUID Generator</span>
               </CommandItem>
             </CommandGroup>
+
+            <CommandGroup heading="Text & Parsing">
+              <CommandItem onSelect={() => runCommand(() => router.push("/regex"))}>
+                <SearchCode className="mr-2 h-4 w-4" />
+                <span>Regex Tester</span>
+              </CommandItem>
+              <CommandItem onSelect={() => runCommand(() => router.push("/text-case"))}>
+                <Type className="mr-2 h-4 w-4" />
+                <span>Text Case Converter</span>
+              </CommandItem>
+              <CommandItem onSelect={() => runCommand(() => router.push("/lorem"))}>
+                <AlignLeft className="mr-2 h-4 w-4" />
+                <span>Lorem Ipsum Generator</span>
+              </CommandItem>
+            </CommandGroup>
+
             <CommandSeparator />
             {session && (
               <CommandGroup heading="Account">

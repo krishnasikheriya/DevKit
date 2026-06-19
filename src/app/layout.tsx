@@ -48,11 +48,17 @@ export default function RootLayout({
           <AuthProvider>
             <AuthGate>
               <QueryProvider>
-                <div className="flex h-screen w-full overflow-hidden bg-slate-50/50 dark:bg-slate-950/50">
+                <div className="relative flex h-screen w-full overflow-hidden bg-background selection:bg-primary/30">
+                  {/* Premium Subtle Glowing Orbs in Background */}
+                  <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                    <div className="absolute -left-1/4 -top-1/4 h-1/2 w-1/2 rounded-full bg-primary/5 blur-[120px]" />
+                    <div className="absolute -bottom-1/4 -right-1/4 h-1/2 w-1/2 rounded-full bg-primary/5 blur-[120px]" />
+                  </div>
+
                   <Sidebar />
-                  <div className="flex-1 flex flex-col min-w-0">
+                  <div className="flex-1 flex flex-col min-w-0 z-10">
                     <Topbar />
-                    <main className="flex-1 overflow-auto">{children}</main>
+                    <main className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">{children}</main>
                   </div>
                 </div>
               </QueryProvider>
