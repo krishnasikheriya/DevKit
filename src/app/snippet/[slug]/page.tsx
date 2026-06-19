@@ -69,7 +69,11 @@ export default async function SnippetPage({ params }: { params: { slug: string }
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <ExportImageButton targetId="snippet-export-container" fileName={`${snippet.title}-snippet.png`} />
+          <ExportImageButton 
+            content={snippet.content} 
+            language={snippet.language} 
+            title={snippet.title} 
+          />
           <CopyToClipboard text={snippet.content} />
         </div>
       </div>

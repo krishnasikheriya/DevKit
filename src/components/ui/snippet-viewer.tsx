@@ -1,6 +1,7 @@
 "use client";
 
 import CodeMirror from "@uiw/react-codemirror";
+import { EditorView } from "codemirror";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { sql } from "@codemirror/lang-sql";
 import { json } from "@codemirror/lang-json";
@@ -10,9 +11,10 @@ import { vscodeDark, vscodeLight } from "@uiw/codemirror-theme-vscode";
 interface SnippetViewerProps {
   content: string;
   language: string;
+  wrapLines?: boolean;
 }
 
-export function SnippetViewer({ content, language }: SnippetViewerProps) {
+export function SnippetViewer({ content, language, wrapLines = false }: SnippetViewerProps) {
   const { resolvedTheme } = useTheme();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let extensions: any[] = [];
@@ -25,11 +27,15 @@ export function SnippetViewer({ content, language }: SnippetViewerProps) {
     extensions = [json()];
   }
 
+  if (wrapLines) {
+    extensions.push(EditorView.lineWrapping);
+  }
+
   return (
     <CodeMirror
       value={content}
-      height="100%"
-      className="h-full text-base"
+      height={wrapLines ? "auto" : "100%"}
+      className={wrapLines ? "text-base" : "h-full text-base"}
       theme={resolvedTheme === "dark" ? vscodeDark : vscodeLight}
       extensions={extensions}
       editable={false}
