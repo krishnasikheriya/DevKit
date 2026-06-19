@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
-import { Code2 } from "lucide-react";
+import { Code2, Wand2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { ClearInputButton } from "@/components/ui/clear-input";
 import { ShareSnippet } from "@/components/ui/share-snippet";
 import { ExportImageButton } from "@/components/ui/export-image-button";
@@ -23,6 +24,8 @@ import { json } from "@codemirror/lang-json";
 import { html } from "@codemirror/lang-html";
 import { css } from "@codemirror/lang-css";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
+import { detectLanguage } from "@/lib/detect-language";
+import { useRef } from "react";
 
 const LANGUAGES = [
   { value: "javascript", label: "JavaScript" },
@@ -79,6 +82,27 @@ export default function CodePastePage() {
   const editorTheme = resolvedTheme === "dark" ? vscodeDark : vscodeLight;
   const previewTheme = exportDark ? vscodeDark : vscodeLight;
 
+  const prevCodeLength = useRef(code.length);
+
+  const handleCodeChange = (value: string) => {
+    // Auto-detect language if code is pasted (length increases by > 20 chars at once)
+    if (value.length > prevCodeLength.current + 20) {
+      const detected = detectLanguage(value);
+      if (LANGUAGES.some(l => l.value === detected)) {
+        setLanguage(detected);
+      }
+    }
+    prevCodeLength.current = value.length;
+    setCode(value);
+  };
+
+  const forceAutoDetect = () => {
+    const detected = detectLanguage(code);
+    if (LANGUAGES.some(l => l.value === detected)) {
+      setLanguage(detected);
+    }
+  };
+
   const lineCount = code.split("\n").length;
   const charCount = code.length;
 
@@ -130,6 +154,15 @@ export default function CodePastePage() {
               </option>
             ))}
           </select>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={forceAutoDetect}
+            className="h-8 px-2 text-muted-foreground hover:text-foreground"
+            title="Auto-detect language"
+          >
+            <Wand2 className="h-4 w-4" />
+          </Button>
         </div>
         <div className="text-xs text-muted-foreground ml-auto">
           {lineCount} lines · {charCount} chars
@@ -152,7 +185,7 @@ export default function CodePastePage() {
               value={code}
               height="100%"
               extensions={getLanguageExtension(language)}
-              onChange={(value) => setCode(value)}
+              onChange={handleCodeChange}
               theme={editorTheme}
               className="absolute inset-0 text-base"
               basicSetup={{
