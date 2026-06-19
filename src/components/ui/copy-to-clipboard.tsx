@@ -8,9 +8,10 @@ import { toast } from "sonner";
 interface CopyToClipboardProps {
   text: string;
   className?: string;
+  disabled?: boolean;
 }
 
-export function CopyToClipboard({ text, className }: CopyToClipboardProps) {
+export function CopyToClipboard({ text, className, disabled }: CopyToClipboardProps) {
   const [hasCopied, setHasCopied] = useState(false);
 
   const copyToClipboard = async () => {
@@ -39,6 +40,7 @@ export function CopyToClipboard({ text, className }: CopyToClipboardProps) {
       className={`h-8 w-8 ${className}`}
       onClick={copyToClipboard}
       title="Copy to clipboard"
+      disabled={disabled}
     >
       {hasCopied ? (
         <Check className="h-4 w-4 text-green-500" />
