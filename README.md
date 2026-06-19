@@ -21,10 +21,15 @@ DevKit is a minimalist developer utility dashboard built with Next.js, providing
 - **Text Case Converter**: Transform strings into camelCase, PascalCase, snake_case, and more.
 - **Lorem Ipsum Generator**: Generate fully customizable placeholder text (words, sentences, paragraphs).
 - **SQL Formatter**: Format and beautify SQL queries across multiple dialects (PostgreSQL, MySQL, SQLite, etc.).
+- **QR Code Generator**: Create downloadable, customizable QR codes instantly.
+- **Markdown Previewer**: Write and preview GitHub-flavored markdown with live sync.
 
 ## Features
 
 - Premium UI Aesthetics (MacOS-style Glassmorphism, deep dark mode, glowing accents).
+- **Fully Mobile Responsive**: Adapts seamlessly to all screen sizes with intelligent layout shifts and mobile navigation.
+- **PWA Ready**: Installable as a standalone app with full offline caching support.
+- **Snippet Sharing**: Generate unique, public URLs to share code snippets or configurations via MongoDB.
 - Local storage persistence for all tool states.
 - CodeMirror integration for code formatting and syntax highlighting.
 - Global Command Palette (`Cmd + K`) for instant navigation with categorized tools.
