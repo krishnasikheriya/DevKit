@@ -57,7 +57,7 @@ export function ExportImageButton({ content, language, title }: ExportImageButto
         Export Image
       </Button>
 
-      <div className="absolute left-[-9999px] top-[-9999px]">
+      <div className="fixed left-[-9999px] top-[-9999px]">
         <div 
           id="hidden-export-container" 
           className="p-12 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 w-[800px]"

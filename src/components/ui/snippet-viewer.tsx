@@ -29,6 +29,14 @@ export function SnippetViewer({ content, language, wrapLines = false }: SnippetV
 
   if (wrapLines) {
     extensions.push(EditorView.lineWrapping);
+    // Force CodeMirror to render all content by disabling scroll
+    extensions.push(
+      EditorView.theme({
+        "&": { height: "auto", minHeight: "100%" },
+        ".cm-scroller": { overflow: "visible !important" },
+        ".cm-content": { paddingBottom: "0" }
+      })
+    );
   }
 
   return (
