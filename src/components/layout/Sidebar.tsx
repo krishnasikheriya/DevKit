@@ -67,7 +67,7 @@ export function Sidebar() {
   const { data: session } = useSession();
 
   return (
-    <div className="w-64 border-r border-border/40 bg-background/60 backdrop-blur-2xl text-foreground flex flex-col h-screen z-20">
+    <div className="w-64 border-r border-border/40 bg-background/60 backdrop-blur-2xl text-foreground flex flex-col h-full z-20">
       <div className="h-16 flex items-center px-6 border-b border-border/40">
         <div className="flex items-center gap-2">
           <img src="/image.png" alt="DevKit" className="w-6 h-6 rounded-md shadow-sm" />

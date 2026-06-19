@@ -48,7 +48,7 @@ export default function RootLayout({
           <AuthProvider>
             <AuthGate>
               <QueryProvider>
-                <div className="relative flex h-screen w-full overflow-hidden bg-background selection:bg-primary/30">
+                <div className="relative flex flex-1 w-full overflow-hidden bg-background selection:bg-primary/30">
                   {/* Premium Subtle Glowing Orbs in Background */}
                   <div className="pointer-events-none absolute inset-0 overflow-hidden">
                     <div className="absolute -left-1/4 -top-1/4 h-1/2 w-1/2 rounded-full bg-primary/5 blur-[120px]" />
