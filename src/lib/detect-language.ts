@@ -21,9 +21,17 @@ export function detectLanguage(code: string): string {
   }
 
   // 3. Heuristics for Markdown
-  if (/^#+\s/.test(code) || /\[.*\]\(.*\)/.test(code) || /^\s*(-|\*)\s/.test(code) || /```[a-z]*\n/.test(code)) {
-    // If it looks very much like markdown
-    if (!/^\s*(import|function|class|def|fn|public)\s/.test(code)) {
+  const hasMarkdownHeadings = /^#+\s/m.test(code);
+  const hasMarkdownLists = /^\s*(-|\*)\s/m.test(code);
+  const hasMarkdownCodeBlocks = /```[a-z]*\n/m.test(code);
+  const hasMarkdownLinks = /\[[^\]]+\]\([^)]+\)/.test(code);
+
+  if (hasMarkdownHeadings || hasMarkdownLists || hasMarkdownCodeBlocks || hasMarkdownLinks) {
+    // If it looks very much like markdown, ensure it doesn't look like strong code
+    const hasStrongCodeKeywords = /^\s*(import|function|class|def|fn|public|#include|namespace|using|struct|int\s+main)\b/m.test(code);
+    const hasSemicolons = (code.match(/;/g) || []).length > 3; // Markdown rarely has many semicolons
+
+    if (!hasStrongCodeKeywords && !hasSemicolons) {
       return "markdown";
     }
   }
