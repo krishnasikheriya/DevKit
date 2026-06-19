@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { Button } from "@/components/ui/button";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
@@ -13,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { ClearInputButton } from "@/components/ui/clear-input";
 
 export default function JwtDecoderPage() {
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const [jwt, setJwt] = useLocalStorage("devkit-jwt-input", "");
   const [header, setHeader] = useLocalStorage("devkit-jwt-header", "");
   const [payload, setPayload] = useLocalStorage("devkit-jwt-payload", "");
@@ -96,7 +98,10 @@ export default function JwtDecoderPage() {
         {error && <div className="text-red-500 text-sm mt-1">{error}</div>}
       </div>
 
-      <ResizablePanelGroup orientation="horizontal" className="flex-1 rounded-lg border shadow-sm">
+      <ResizablePanelGroup
+        orientation={isMobile ? "vertical" : "horizontal"}
+        className="flex-1 rounded-lg border shadow-sm"
+      >
         <ResizablePanel defaultSize={30} minSize={20}>
           <div className="h-full flex flex-col p-2 bg-slate-50 dark:bg-slate-900/50">
             <div className="flex items-center justify-between mb-2">

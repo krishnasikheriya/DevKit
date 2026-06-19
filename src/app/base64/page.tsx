@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { Button } from "@/components/ui/button";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
@@ -11,6 +12,7 @@ import { CopyToClipboard } from "@/components/ui/copy-to-clipboard";
 import { ClearInputButton } from "@/components/ui/clear-input";
 
 export default function Base64Page() {
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const [input, setInput] = useLocalStorage("devkit-base64-input", "");
   const [output, setOutput] = useLocalStorage("devkit-base64-output", "");
   const [error, setError] = useState<string | null>(null);
@@ -89,7 +91,10 @@ export default function Base64Page() {
         </div>
       </div>
 
-      <ResizablePanelGroup orientation="horizontal" className="flex-1 rounded-lg border shadow-sm">
+      <ResizablePanelGroup
+        orientation={isMobile ? "vertical" : "horizontal"}
+        className="flex-1 rounded-lg border shadow-sm"
+      >
         <ResizablePanel defaultSize={50} minSize={20}>
           <div className="h-full flex flex-col p-2 bg-slate-50 dark:bg-slate-900/50">
             <div className="flex items-center justify-between mb-2">

@@ -66,20 +66,20 @@ const TOOL_CATEGORIES = [
   },
 ];
 
-export function Sidebar() {
+export function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const { data: session } = useSession();
 
   return (
-    <div className="w-64 border-r border-border/40 bg-background/60 backdrop-blur-2xl text-foreground flex flex-col h-full z-20">
-      <div className="h-16 flex items-center px-6 border-b border-border/40">
+    <>
+      <div className="h-16 flex items-center px-6 border-b border-border/40 shrink-0">
         <div className="flex items-center gap-2">
           <img src="/image.png" alt="DevKit" className="w-6 h-6 rounded-md shadow-sm" />
           <span className="font-bold text-lg tracking-wide">DevKit</span>
         </div>
       </div>
 
-      <ScrollArea className="flex-1 py-6 px-4">
+      <ScrollArea className="flex-1 min-h-0 py-6 px-4">
         <div className="space-y-6">
           {TOOL_CATEGORIES.map((category) => (
             <div key={category.name}>
@@ -93,6 +93,7 @@ export function Sidebar() {
                     <Link
                       key={tool.name}
                       href={tool.href}
+                      onClick={onNavigate}
                       className={cn(
                         "group flex items-center gap-3 px-4 py-2.5 rounded-md transition-all duration-300 text-sm font-medium",
                         isActive
@@ -118,7 +119,7 @@ export function Sidebar() {
         </div>
       </ScrollArea>
 
-      <div className="p-4 border-t text-sm text-slate-500 flex flex-col gap-2">
+      <div className="p-4 border-t text-sm text-slate-500 flex flex-col gap-2 shrink-0">
         {session ? (
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-2 overflow-hidden">
@@ -146,6 +147,14 @@ export function Sidebar() {
           <span className="text-xs italic text-slate-400">Not signed in</span>
         )}
       </div>
+    </>
+  );
+}
+
+export function Sidebar() {
+  return (
+    <div className="hidden md:flex w-64 border-r border-border/40 bg-background/60 backdrop-blur-2xl text-foreground flex-col h-full z-20 shrink-0">
+      <SidebarContent />
     </div>
   );
 }

@@ -1,7 +1,7 @@
- 
 "use client";
 
 import { useState, useEffect } from "react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +13,7 @@ import { CopyToClipboard } from "@/components/ui/copy-to-clipboard";
 import { ClearInputButton } from "@/components/ui/clear-input";
 
 export default function RegexTesterPage() {
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const [regex, setRegex] = useLocalStorage("devkit-regex-pattern", "");
   const [flags, setFlags] = useLocalStorage("devkit-regex-flags", "g");
   const [testString, setTestString] = useLocalStorage("devkit-regex-input", "");
@@ -23,11 +24,11 @@ export default function RegexTesterPage() {
   const editorTheme = resolvedTheme === "dark" ? vscodeDark : vscodeLight;
 
   // Dynamically evaluate the regex against the testString on changes
-   
+
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setError(null);
-     
+
     setMatches([]);
 
     if (!regex) return;
@@ -84,7 +85,10 @@ export default function RegexTesterPage() {
         </div>
       </div>
 
-      <ResizablePanelGroup orientation="horizontal" className="flex-1 rounded-lg border shadow-sm">
+      <ResizablePanelGroup
+        orientation={isMobile ? "vertical" : "horizontal"}
+        className="flex-1 rounded-lg border shadow-sm"
+      >
         <ResizablePanel defaultSize={50} minSize={20}>
           <div className="h-full flex flex-col p-2 bg-slate-50 dark:bg-slate-900/50">
             <div className="flex items-center justify-between mb-2">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { Button } from "@/components/ui/button";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
@@ -13,6 +14,7 @@ import { ClearInputButton } from "@/components/ui/clear-input";
 import { ShareSnippet } from "@/components/ui/share-snippet";
 
 export default function JsonFormatterPage() {
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const [inputJson, setInputJson] = useLocalStorage("devkit-json-input", "");
   const [outputJson, setOutputJson] = useLocalStorage("devkit-json-output", "");
   const [error, setError] = useState<string | null>(null);
@@ -77,7 +79,10 @@ export default function JsonFormatterPage() {
         </div>
       </div>
 
-      <ResizablePanelGroup orientation="horizontal" className="flex-1 rounded-lg border shadow-sm">
+      <ResizablePanelGroup
+        orientation={isMobile ? "vertical" : "horizontal"}
+        className="flex-1 rounded-lg border shadow-sm"
+      >
         <ResizablePanel defaultSize={50} minSize={20}>
           <div className="h-full flex flex-col p-2 bg-slate-50 dark:bg-slate-900/50">
             <div className="flex items-center justify-between mb-2">

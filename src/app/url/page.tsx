@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { Button } from "@/components/ui/button";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
@@ -11,6 +12,7 @@ import { CopyToClipboard } from "@/components/ui/copy-to-clipboard";
 import { ClearInputButton } from "@/components/ui/clear-input";
 
 export default function UrlEncoderPage() {
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const [input, setInput] = useLocalStorage("devkit-url-input", "");
   const [output, setOutput] = useLocalStorage("devkit-url-output", "");
   const [error, setError] = useState<string | null>(null);
@@ -86,7 +88,7 @@ export default function UrlEncoderPage() {
       </div>
 
       <ResizablePanelGroup
-        orientation="horizontal"
+        orientation={isMobile ? "vertical" : "horizontal"}
         className="min-h-[400px] max-h-[400px] rounded-lg border shadow-sm"
       >
         <ResizablePanel defaultSize={50} minSize={20}>

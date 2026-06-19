@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { Button } from "@/components/ui/button";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
@@ -22,6 +23,7 @@ import {
 import { ShareSnippet } from "@/components/ui/share-snippet";
 
 export default function SqlFormatterPage() {
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const [inputSql, setInputSql] = useLocalStorage("devkit-sql-input", "");
   const [outputSql, setOutputSql] = useLocalStorage("devkit-sql-output", "");
   const [dialect, setDialect] = useLocalStorage("devkit-sql-dialect", "postgresql");
@@ -96,7 +98,10 @@ export default function SqlFormatterPage() {
         </div>
       )}
 
-      <ResizablePanelGroup orientation="horizontal" className="flex-1 rounded-lg border">
+      <ResizablePanelGroup
+        orientation={isMobile ? "vertical" : "horizontal"}
+        className="flex-1 rounded-lg border"
+      >
         {/* Input Panel */}
         <ResizablePanel defaultSize={50} className="flex flex-col bg-card">
           <div className="flex items-center justify-between p-2 px-4 border-b bg-muted/30">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import CodeMirror from "@uiw/react-codemirror";
@@ -10,6 +11,7 @@ import { CopyToClipboard } from "@/components/ui/copy-to-clipboard";
 import { ClearInputButton } from "@/components/ui/clear-input";
 
 export default function HashGeneratorPage() {
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const [input, setInput] = useLocalStorage("devkit-hash-input", "");
   const [hashes, setHashes] = useState<Record<string, string>>({
     "SHA-1": "",
@@ -56,7 +58,7 @@ export default function HashGeneratorPage() {
       </div>
 
       <ResizablePanelGroup
-        orientation="horizontal"
+        orientation={isMobile ? "vertical" : "horizontal"}
         className="min-h-[400px] max-h-[600px] rounded-lg border shadow-sm"
       >
         <ResizablePanel defaultSize={50} minSize={20}>

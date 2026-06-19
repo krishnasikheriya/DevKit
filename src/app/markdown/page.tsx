@@ -3,6 +3,7 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { FileText, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -45,6 +46,7 @@ function helloWorld() {
 `;
 
 export default function MarkdownPreviewerPage() {
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const [content, setContent] = useLocalStorage("devkit-markdown", DEFAULT_MARKDOWN);
   const { resolvedTheme } = useTheme();
   const editorTheme = resolvedTheme === "dark" ? vscodeDark : vscodeLight;
@@ -101,7 +103,10 @@ export default function MarkdownPreviewerPage() {
         </div>
       </div>
 
-      <ResizablePanelGroup orientation="horizontal" className="flex-1 rounded-lg border">
+      <ResizablePanelGroup
+        orientation={isMobile ? "vertical" : "horizontal"}
+        className="flex-1 rounded-lg border"
+      >
         {/* Editor Panel */}
         <ResizablePanel defaultSize={50} className="flex flex-col bg-card">
           <div className="flex items-center justify-between p-2 px-4 border-b bg-muted/30">
